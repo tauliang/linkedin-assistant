@@ -1,0 +1,159 @@
+<?xml version='1.0' encoding='utf-8'?>
+<form version="1.1" theme="light">
+  <label>Skills &amp; career</label>
+  <description>Endorsements describe exported activity, not proficiency. Year/month career dates retain their original precision.</description>
+  <init>
+    <set token="latest_export">__none__</set>
+  </init>
+  <fieldset submitButton="false" autoRun="true">
+    <input type="dropdown" token="member" searchWhenChanged="true">
+      <label>Member</label>
+      <default>personal</default>
+      <search>
+        <query>index=linkedin sourcetype=linkedin:* earliest=0 latest=+10y | search member_id=* | stats count BY member_id | eval member_label=if(member_id="personal","Personal",member_id) | fields member_id member_label</query>
+        <earliest>0</earliest>
+        <latest>now</latest>
+        <refresh>60s</refresh>
+        <refreshType>delay</refreshType>
+      </search>
+      <fieldForLabel>member_label</fieldForLabel>
+      <fieldForValue>member_id</fieldForValue>
+    </input>
+    <input type="dropdown" token="snapshot" searchWhenChanged="true">
+      <label>Snapshot</label>
+      <choice value="latest">Latest ready snapshot (automatic)</choice>
+      <default>latest</default>
+      <search>
+        <query>index=linkedin sourcetype=linkedin:ready earliest=0 latest=+10y | search event_kind=ready member_id=$member|s$ | dedup export_id | sort - import_epoch | eval label=snapshot_time." — ".status | fields label export_id</query>
+        <earliest>0</earliest>
+        <latest>now</latest>
+        <refresh>60s</refresh>
+        <refreshType>delay</refreshType>
+      </search>
+      <fieldForLabel>label</fieldForLabel>
+      <fieldForValue>export_id</fieldForValue>
+    </input>
+  </fieldset>
+  <search>
+    <query>index=linkedin sourcetype=linkedin:ready earliest=0 latest=+10y | search event_kind=ready member_id=$member|s$ | dedup export_id | sort - import_epoch | head 1 | fields export_id</query>
+    <earliest>0</earliest>
+    <latest>now</latest>
+    <refresh>30s</refresh>
+    <refreshType>delay</refreshType>
+    <done>
+      <condition match="$job.resultCount$ &gt; 0">
+        <set token="latest_export">$result.export_id$</set>
+      </condition>
+      <condition>
+        <set token="latest_export">__none__</set>
+      </condition>
+    </done>
+  </search>
+  <row>
+    <panel>
+      <title>Selected snapshot</title>
+      <table>
+        <search>
+          <query>index=linkedin sourcetype=linkedin:ready earliest=0 latest=+10y | search event_kind=ready member_id=$member|s$ | where export_id=if($snapshot|s$="latest",$latest_export|s$,$snapshot|s$) | dedup export_id | table snapshot_time snapshot_time_basis status actual_records warning_count export_id</query>
+          <earliest>0</earliest>
+          <latest>now</latest>
+          <refresh>60s</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Most endorsed skills</title>
+      <chart>
+        <search>
+          <query>`li_records` | search member_id=$member|s$ | where export_id=if($snapshot|s$="latest",$latest_export|s$,$snapshot|s$) | search dataset=endorsement_received | stats count AS Endorsements BY skill | sort - Endorsements | head 20</query>
+          <earliest>0</earliest>
+          <latest>now</latest>
+          <refresh>60s</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="charting.chart">bar</option>
+        <option name="charting.legend.placement">bottom</option>
+        <option name="drilldown">none</option>
+      </chart>
+    </panel>
+    <panel>
+      <title>Given and received endorsements</title>
+      <chart>
+        <search>
+          <query>`li_records` | search member_id=$member|s$ | where export_id=if($snapshot|s$="latest",$latest_export|s$,$snapshot|s$) | search dataset IN (endorsement_given,endorsement_received) time_basis=activity | timechart span=1mon count BY dataset</query>
+          <earliest>0</earliest>
+          <latest>now</latest>
+          <refresh>60s</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="charting.chart">column</option>
+        <option name="charting.legend.placement">bottom</option>
+        <option name="drilldown">none</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Declared skills without received endorsements</title>
+      <table>
+        <search>
+          <query>`li_records` | search member_id=$member|s$ | where export_id=if($snapshot|s$="latest",$latest_export|s$,$snapshot|s$) | search dataset IN (skill,endorsement_received) | eval declared=if(dataset="skill",1,0), received=if(dataset="endorsement_received",1,0), skill=coalesce(skill,name) | stats max(declared) AS declared sum(received) AS endorsements BY skill | where declared=1 AND endorsements=0 | table skill</query>
+          <earliest>0</earliest>
+          <latest>now</latest>
+          <refresh>60s</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="count">10</option>
+      </table>
+    </panel>
+    <panel>
+      <title>Position history</title>
+      <table>
+        <search>
+          <query>`li_records` | search member_id=$member|s$ | where export_id=if($snapshot|s$="latest",$latest_export|s$,$snapshot|s$) | search dataset=position | table company title location started_on started_on_precision finished_on finished_on_precision</query>
+          <earliest>0</earliest>
+          <latest>now</latest>
+          <refresh>60s</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="count">10</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Education</title>
+      <table>
+        <search>
+          <query>`li_records` | search member_id=$member|s$ | where export_id=if($snapshot|s$="latest",$latest_export|s$,$snapshot|s$) | search dataset=education | table school_name degree_name start_date end_date</query>
+          <earliest>0</earliest>
+          <latest>now</latest>
+          <refresh>60s</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="count">10</option>
+      </table>
+    </panel>
+    <panel>
+      <title>Certifications</title>
+      <table>
+        <search>
+          <query>`li_records` | search member_id=$member|s$ | where export_id=if($snapshot|s$="latest",$latest_export|s$,$snapshot|s$) | search dataset=certifications | table name authority started_on finished_on url</query>
+          <earliest>0</earliest>
+          <latest>now</latest>
+          <refresh>60s</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="count">10</option>
+      </table>
+    </panel>
+  </row>
+</form>

@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='utf-8'?>
+<form version="1.1" theme="light">
+  <label>Setup &amp; inbox</label>
+  <description>Install on a single Splunk Enterprise 9.3+ Linux instance, restart Splunk, then copy ZIPs into $SPLUNK_HOME/var/lib/linkedin_assistant/inbox/. The folder is created by the worker. Default member is personal and timezone is UTC; optional local settings are described in the packaged README.</description>
+  <init>
+    <set token="latest_export">__none__</set>
+  </init>
+  <fieldset submitButton="false" autoRun="true">
+    <input type="dropdown" token="member" searchWhenChanged="true">
+      <label>Member</label>
+      <default>personal</default>
+      <search>
+        <query>index=linkedin sourcetype=linkedin:* earliest=0 latest=+10y | search member_id=* | stats count BY member_id | eval member_label=if(member_id="personal","Personal",member_id) | fields member_id member_label</query>
+        <earliest>0</earliest>
+        <latest>now</latest>
+        <refresh>60s</refresh>
+        <refreshType>delay</refreshType>
+      </search>
+      <fieldForLabel>member_label</fieldForLabel>
+      <fieldForValue>member_id</fieldForValue>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <title>Inbox and worker state</title>
+      <table>
+        <search>
+          <query>index=linkedin sourcetype=linkedin:worker earliest=0 latest=+10y | sort - _time | dedup member_id | eval age_seconds=round(now()-_time) | table member_id inbox_path status age_seconds reason</query>
+          <earliest>0</earliest>
+          <latest>now</latest>
+          <refresh>60s</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="count">10</option>
+      </table>
+    </panel>
+    <panel>
+      <title>Ready snapshots</title>
+      <table>
+        <search>
+          <query>index=linkedin sourcetype=linkedin:ready earliest=0 latest=+10y | search event_kind=ready | dedup member_id export_id | sort - import_epoch | table member_id snapshot_time status actual_records warning_count</query>
+          <earliest>0</earliest>
+          <latest>now</latest>
+          <refresh>60s</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="count">10</option>
+      </table>
+    </panel>
+  </row>
+</form>

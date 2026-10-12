@@ -1,0 +1,347 @@
+{
+  "Ad_Targeting.csv": [
+    "Member Age",
+    "Buyer Groups",
+    "Company Names",
+    "Company Names",
+    "Company Follower of",
+    "Company Names",
+    "Company Category",
+    "Company Size",
+    "Degrees",
+    "degreeClass",
+    "Devices",
+    "Member Schools",
+    "Company Growth Rate",
+    "Fields of Study",
+    "Company Connections",
+    "Function By Size",
+    "Job Functions",
+    "Member Gender",
+    "Graduation Year",
+    "Member Groups",
+    "Company Industries",
+    "Member Interests",
+    "Interface Locales",
+    "interfaceLocale",
+    "Member Traits",
+    "High Value Audience Segments",
+    "Profile Locations",
+    "Company Revenue",
+    "Job Seniorities",
+    "Member Skills",
+    "Standard Audience Segments",
+    "Job Titles",
+    "Job Titles",
+    "Job Titles",
+    "Years of Experience"
+  ],
+  "Certifications.csv": [
+    "Name",
+    "Url",
+    "Authority",
+    "Started On",
+    "Finished On",
+    "License Number"
+  ],
+  "Company Follows.csv": [
+    "Organization",
+    "Followed On"
+  ],
+  "Connections.csv": [
+    "First Name",
+    "Last Name",
+    "URL",
+    "Email Address",
+    "Company",
+    "Position",
+    "Connected On"
+  ],
+  "Courses.csv": [
+    "Name",
+    "Number"
+  ],
+  "Education.csv": [
+    "School Name",
+    "Start Date",
+    "End Date",
+    "Notes",
+    "Degree Name",
+    "Activities"
+  ],
+  "Email Addresses.csv": [
+    "Email Address",
+    "Confirmed",
+    "Primary",
+    "Updated On"
+  ],
+  "Endorsement_Given_Info.csv": [
+    "Endorsement Date",
+    "Skill Name",
+    "Endorsee First Name",
+    "Endorsee Last Name",
+    "Endorsee Public Url",
+    "Endorsement Status"
+  ],
+  "Endorsement_Received_Info.csv": [
+    "Endorsement Date",
+    "Skill Name",
+    "Endorser First Name",
+    "Endorser Last Name",
+    "Endorser Public Url",
+    "Endorsement Status"
+  ],
+  "Events.csv": [
+    "Event Name",
+    "Event Time",
+    "Status",
+    "External Url"
+  ],
+  "Honors.csv": [
+    "Title",
+    "Description",
+    "Issued On"
+  ],
+  "Invitations.csv": [
+    "From",
+    "To",
+    "Sent At",
+    "Message",
+    "Direction",
+    "inviterProfileUrl",
+    "inviteeProfileUrl"
+  ],
+  "Job Applicant Saved Screening Question Responses.csv": [
+    "Question",
+    "Answer"
+  ],
+  "Jobs/Job Applicant Saved Answers.csv": [
+    "Question",
+    "Answer"
+  ],
+  "Jobs/Job Applications.csv": [
+    "Application Date",
+    "Contact Email",
+    "Contact Phone Number",
+    "Company Name",
+    "Job Title",
+    "Job Url",
+    "Resume Name",
+    "Question And Answers"
+  ],
+  "Jobs/Job Seeker Preferences.csv": [
+    "Locations",
+    "Industries",
+    "Company Employee Count",
+    "Preferred Job Types",
+    "Job Titles",
+    "Open To Recruiters",
+    "Dream Companies",
+    "Profile Shared With Job Poster",
+    "Job Title For Searching Fast Growing Companies",
+    "Introduction Statement",
+    "Phone Number",
+    "Job Seeker Activity Level",
+    "Preferred Start Time Range",
+    "Commute Preference Starting Address",
+    "Commute Preference Starting Time",
+    "Mode Of Transportation",
+    "Maximum Commute Duration",
+    "Open Candidate Visibility",
+    "Job Seeking Urgency Level",
+    "Semantic Preferences"
+  ],
+  "Jobs/Online Job Postings.csv": [
+    "Company Name",
+    "Title",
+    "Employment Status",
+    "Company Description",
+    "Job Description",
+    "Location Description",
+    "Job Functions",
+    "Company Industries",
+    "Seniority Level",
+    "Required Skills",
+    "Education Levels",
+    "Onsite Apply",
+    "Contact Email",
+    "Company Apply Url",
+    "Base Salary",
+    "Additional Compensation",
+    "Job State",
+    "Create Date",
+    "List Date",
+    "Close Date",
+    "Expiration Date"
+  ],
+  "Jobs/Saved Jobs.csv": [
+    "Saved Date",
+    "Job Url",
+    "Job Title",
+    "Company Name"
+  ],
+  "Languages.csv": [
+    "Name",
+    "Proficiency"
+  ],
+  "Learning.csv": [
+    "Content Title",
+    "Content Description",
+    "Content Type",
+    "Content Last Watched Date (if viewed)",
+    "Content Completed At (if completed)",
+    "Content Saved",
+    "Notes taken on videos (if taken)",
+    ""
+  ],
+  "Notes.csv": [
+    "Connection First Name",
+    "Connection Last Name",
+    "Connection Profile URL",
+    "Note",
+    "Created On",
+    "Edited On"
+  ],
+  "Organizations.csv": [
+    "Name",
+    "Description",
+    "Position",
+    "Started On",
+    "Finished On"
+  ],
+  "PhoneNumbers.csv": [
+    "Extension",
+    "Number",
+    "Type"
+  ],
+  "Positions.csv": [
+    "Company Name",
+    "Title",
+    "Description",
+    "Location",
+    "Started On",
+    "Finished On"
+  ],
+  "Private_identity_asset.csv": [
+    "Private Identity Asset Name",
+    "Private Identity Asset Raw Text"
+  ],
+  "Profile Summary.csv": [
+    "Profile Summary"
+  ],
+  "Profile.csv": [
+    "First Name",
+    "Last Name",
+    "Maiden Name",
+    "Address",
+    "Birth Date",
+    "Headline",
+    "Summary",
+    "Industry",
+    "Zip Code",
+    "Geo Location",
+    "Twitter Handles",
+    "Websites",
+    "Instant Messengers"
+  ],
+  "Projects.csv": [
+    "Title",
+    "Description",
+    "Url",
+    "Started On",
+    "Finished On"
+  ],
+  "Receipts_v2.csv": [
+    "First Name",
+    "Last Name",
+    "Billing Country",
+    "Postal Code",
+    "Transaction Made At",
+    "Payment Method Type",
+    "Invoice Number",
+    "Description",
+    "Tax Amount",
+    "Sub Total",
+    "Total Amount",
+    "Currency Code"
+  ],
+  "Recommendations_Given.csv": [
+    "First Name",
+    "Last Name",
+    "Company",
+    "Job Title",
+    "Text",
+    "Creation Date",
+    "Status"
+  ],
+  "Recommendations_Received.csv": [
+    "First Name",
+    "Last Name",
+    "Company",
+    "Job Title",
+    "Text",
+    "Creation Date",
+    "Status"
+  ],
+  "Registration.csv": [
+    "Registered At",
+    "Registration Ip",
+    "Subscription Types"
+  ],
+  "Rich_Media.csv": [
+    "Date/Time",
+    "Media Description",
+    "Media Link"
+  ],
+  "SavedJobAlerts.csv": [
+    "ALERT_PARAMETERS",
+    "QUERY_CONTEXT",
+    "SAVED_SEARCH_ID"
+  ],
+  "Services Marketplace/Engagements.csv": [
+    "Creation Time",
+    "Marketplace Type",
+    "Body",
+    "Currency Code",
+    "Currency Amount",
+    "Billing Time Unit",
+    "Free Consultation included"
+  ],
+  "Services Marketplace/Opprtunities.csv": [
+    "Creation Time",
+    "Marketplace Type",
+    "Service Category",
+    "Location",
+    "Questions and Answers",
+    "Preferred Providers",
+    "Status"
+  ],
+  "Skills.csv": [
+    "Name"
+  ],
+  "Verifications/Verifications.csv": [
+    "First name",
+    "Middle name",
+    "Last name",
+    "Verification type",
+    "Organization name",
+    "Email address",
+    "Country",
+    "State",
+    "City",
+    "Year of birth",
+    "Issuing authority",
+    "Document type",
+    "Verification service provider",
+    "Verified date",
+    "Expiry date"
+  ],
+  "Volunteering.csv": [
+    "Company Name",
+    "Role",
+    "Cause",
+    "Started On",
+    "Finished On",
+    "Description"
+  ]
+}

@@ -1,0 +1,154 @@
+<?xml version='1.0' encoding='utf-8'?>
+<form version="1.1" theme="light">
+  <label>LinkedIn Assistant</label>
+  <description>Drop a LinkedIn export ZIP into the server inbox shown in Setup &amp; inbox. Dashboards switch automatically after indexed record counts reconcile. Dates labeled import_observed describe when the snapshot was received.</description>
+  <init>
+    <set token="latest_export">__none__</set>
+  </init>
+  <fieldset submitButton="false" autoRun="true">
+    <input type="dropdown" token="member" searchWhenChanged="true">
+      <label>Member</label>
+      <default>personal</default>
+      <search>
+        <query>index=linkedin sourcetype=linkedin:* earliest=0 latest=+10y | search member_id=* | stats count BY member_id | eval member_label=if(member_id="personal","Personal",member_id) | fields member_id member_label</query>
+        <earliest>0</earliest>
+        <latest>now</latest>
+        <refresh>60s</refresh>
+        <refreshType>delay</refreshType>
+      </search>
+      <fieldForLabel>member_label</fieldForLabel>
+      <fieldForValue>member_id</fieldForValue>
+    </input>
+    <input type="dropdown" token="snapshot" searchWhenChanged="true">
+      <label>Snapshot</label>
+      <choice value="latest">Latest ready snapshot (automatic)</choice>
+      <default>latest</default>
+      <search>
+        <query>index=linkedin sourcetype=linkedin:ready earliest=0 latest=+10y | search event_kind=ready member_id=$member|s$ | dedup export_id | sort - import_epoch | eval label=snapshot_time." — ".status | fields label export_id</query>
+        <earliest>0</earliest>
+        <latest>now</latest>
+        <refresh>60s</refresh>
+        <refreshType>delay</refreshType>
+      </search>
+      <fieldForLabel>label</fieldForLabel>
+      <fieldForValue>export_id</fieldForValue>
+    </input>
+  </fieldset>
+  <search>
+    <query>index=linkedin sourcetype=linkedin:ready earliest=0 latest=+10y | search event_kind=ready member_id=$member|s$ | dedup export_id | sort - import_epoch | head 1 | fields export_id</query>
+    <earliest>0</earliest>
+    <latest>now</latest>
+    <refresh>30s</refresh>
+    <refreshType>delay</refreshType>
+    <done>
+      <condition match="$job.resultCount$ &gt; 0">
+        <set token="latest_export">$result.export_id$</set>
+      </condition>
+      <condition>
+        <set token="latest_export">__none__</set>
+      </condition>
+    </done>
+  </search>
+  <row>
+    <panel>
+      <title>Selected snapshot</title>
+      <table>
+        <search>
+          <query>index=linkedin sourcetype=linkedin:ready earliest=0 latest=+10y | search event_kind=ready member_id=$member|s$ | where export_id=if($snapshot|s$="latest",$latest_export|s$,$snapshot|s$) | dedup export_id | table snapshot_time snapshot_time_basis status actual_records warning_count export_id</query>
+          <earliest>0</earliest>
+          <latest>now</latest>
+          <refresh>60s</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Connections</title>
+      <single>
+        <search>
+          <query>`li_records` | search member_id=$member|s$ | where export_id=if($snapshot|s$="latest",$latest_export|s$,$snapshot|s$) | search dataset=connection | stats count AS Connections</query>
+          <earliest>0</earliest>
+          <latest>now</latest>
+          <refresh>60s</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="drilldown">none</option>
+      </single>
+    </panel>
+    <panel>
+      <title>Applications</title>
+      <single>
+        <search>
+          <query>`li_records` | search member_id=$member|s$ | where export_id=if($snapshot|s$="latest",$latest_export|s$,$snapshot|s$) | search dataset=job_application | stats count AS Applications</query>
+          <earliest>0</earliest>
+          <latest>now</latest>
+          <refresh>60s</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="drilldown">none</option>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Endorsements received</title>
+      <single>
+        <search>
+          <query>`li_records` | search member_id=$member|s$ | where export_id=if($snapshot|s$="latest",$latest_export|s$,$snapshot|s$) | search dataset=endorsement_received | stats count AS Endorsements</query>
+          <earliest>0</earliest>
+          <latest>now</latest>
+          <refresh>60s</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="drilldown">none</option>
+      </single>
+    </panel>
+    <panel>
+      <title>Completed learning items</title>
+      <single>
+        <search>
+          <query>`li_records` | search member_id=$member|s$ | where export_id=if($snapshot|s$="latest",$latest_export|s$,$snapshot|s$) | search dataset=learning | where isnotnull(content_completed_at_if_completed) AND content_completed_at_if_completed!="" AND content_completed_at_if_completed!="N/A" | stats count AS Completed</query>
+          <earliest>0</earliest>
+          <latest>now</latest>
+          <refresh>60s</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="drilldown">none</option>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Available datasets</title>
+      <chart>
+        <search>
+          <query>`li_records` | search member_id=$member|s$ | where export_id=if($snapshot|s$="latest",$latest_export|s$,$snapshot|s$) | stats count AS records BY dataset | sort - records</query>
+          <earliest>0</earliest>
+          <latest>now</latest>
+          <refresh>60s</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="charting.chart">bar</option>
+        <option name="charting.legend.placement">bottom</option>
+        <option name="drilldown">none</option>
+      </chart>
+    </panel>
+    <panel>
+      <title>Import inventory</title>
+      <table>
+        <search>
+          <query>index=linkedin sourcetype=linkedin:manifest earliest=0 latest=+10y | search event_kind=manifest member_id=$member|s$ | where export_id=if($snapshot|s$="latest",$latest_export|s$,$snapshot|s$) | dedup export_id dataset | table dataset source_rows expected_records excluded_rows duplicate_rows quarantined_rows date_issues</query>
+          <earliest>0</earliest>
+          <latest>now</latest>
+          <refresh>60s</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="count">10</option>
+      </table>
+    </panel>
+  </row>
+</form>

@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='utf-8'?>
+<form version="1.1" theme="light">
+  <label>Import health</label>
+  <description>Processing completion and indexing completion are distinct. New imports become ready only after every dataset matches its manifest.</description>
+  <init>
+    <set token="latest_export">__none__</set>
+  </init>
+  <fieldset submitButton="false" autoRun="true">
+    <input type="dropdown" token="member" searchWhenChanged="true">
+      <label>Member</label>
+      <default>personal</default>
+      <search>
+        <query>index=linkedin sourcetype=linkedin:* earliest=0 latest=+10y | search member_id=* | stats count BY member_id | eval member_label=if(member_id="personal","Personal",member_id) | fields member_id member_label</query>
+        <earliest>0</earliest>
+        <latest>now</latest>
+        <refresh>60s</refresh>
+        <refreshType>delay</refreshType>
+      </search>
+      <fieldForLabel>member_label</fieldForLabel>
+      <fieldForValue>member_id</fieldForValue>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <title>Latest watcher heartbeat</title>
+      <table>
+        <search>
+          <query>index=linkedin sourcetype=linkedin:worker earliest=0 latest=+10y | search member_id=$member|s$ | sort - _time | head 1 | eval seconds_since_heartbeat=round(now()-_time) | table _time status inbox_path seconds_since_heartbeat reason</query>
+          <earliest>0</earliest>
+          <latest>now</latest>
+          <refresh>60s</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="count">10</option>
+      </table>
+    </panel>
+    <panel>
+      <title>Recent import lifecycle</title>
+      <table>
+        <search>
+          <query>index=linkedin sourcetype=linkedin:import earliest=0 latest=+10y | search member_id=$member|s$ status!=watching | sort - _time | head 50 | table _time status archive_name export_id expected_records reason</query>
+          <earliest>0</earliest>
+          <latest>now</latest>
+          <refresh>60s</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="count">10</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Per-dataset index reconciliation</title>
+      <table>
+        <search>
+          <query>index=linkedin sourcetype=linkedin:* earliest=0 latest=+10y | where event_kind="record" OR event_kind="manifest" | search member_id=$member|s$ | stats dc(eval(if(event_kind="record",event_id,null()))) AS indexed_unique max(expected_records) AS expected max(quarantined_rows) AS quarantined max(excluded_rows) AS excluded max(duplicate_rows) AS source_duplicates max(date_issues) AS date_issues BY export_id dataset | fillnull value=0 indexed_unique | eval outcome=if(isnull(expected),"manifest pending",if(indexed_unique=expected,"matched","indexing")) | table export_id dataset expected indexed_unique outcome quarantined excluded source_duplicates date_issues</query>
+          <earliest>0</earliest>
+          <latest>now</latest>
+          <refresh>60s</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="count">10</option>
+      </table>
+    </panel>
+    <panel>
+      <title>Imports awaiting reconciliation</title>
+      <table>
+        <search>
+          <query>index=linkedin sourcetype=linkedin:manifest earliest=0 latest=+10y | search event_kind=manifest member_id=$member|s$ | dedup export_id | search NOT [ search index=linkedin sourcetype=linkedin:ready earliest=0 latest=+10y | search event_kind=ready member_id=$member|s$ | fields export_id ] | eval seconds_waiting=round(now()-import_epoch), status=if(seconds_waiting&gt;600,"indexing delayed — check permissions and saved search","indexing") | table snapshot_time export_id seconds_waiting status</query>
+          <earliest>0</earliest>
+          <latest>now</latest>
+          <refresh>60s</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="count">10</option>
+      </table>
+    </panel>
+  </row>
+</form>

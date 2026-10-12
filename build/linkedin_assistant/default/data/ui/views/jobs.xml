@@ -1,0 +1,161 @@
+<?xml version='1.0' encoding='utf-8'?>
+<form version="1.1" theme="light">
+  <label>Job search</label>
+  <description>Applications and saved jobs are activity records. The export does not contain reliable interview, rejection or offer outcomes.</description>
+  <init>
+    <set token="latest_export">__none__</set>
+  </init>
+  <fieldset submitButton="false" autoRun="true">
+    <input type="dropdown" token="member" searchWhenChanged="true">
+      <label>Member</label>
+      <default>personal</default>
+      <search>
+        <query>index=linkedin sourcetype=linkedin:* earliest=0 latest=+10y | search member_id=* | stats count BY member_id | eval member_label=if(member_id="personal","Personal",member_id) | fields member_id member_label</query>
+        <earliest>0</earliest>
+        <latest>now</latest>
+        <refresh>60s</refresh>
+        <refreshType>delay</refreshType>
+      </search>
+      <fieldForLabel>member_label</fieldForLabel>
+      <fieldForValue>member_id</fieldForValue>
+    </input>
+    <input type="dropdown" token="snapshot" searchWhenChanged="true">
+      <label>Snapshot</label>
+      <choice value="latest">Latest ready snapshot (automatic)</choice>
+      <default>latest</default>
+      <search>
+        <query>index=linkedin sourcetype=linkedin:ready earliest=0 latest=+10y | search event_kind=ready member_id=$member|s$ | dedup export_id | sort - import_epoch | eval label=snapshot_time." — ".status | fields label export_id</query>
+        <earliest>0</earliest>
+        <latest>now</latest>
+        <refresh>60s</refresh>
+        <refreshType>delay</refreshType>
+      </search>
+      <fieldForLabel>label</fieldForLabel>
+      <fieldForValue>export_id</fieldForValue>
+    </input>
+  </fieldset>
+  <search>
+    <query>index=linkedin sourcetype=linkedin:ready earliest=0 latest=+10y | search event_kind=ready member_id=$member|s$ | dedup export_id | sort - import_epoch | head 1 | fields export_id</query>
+    <earliest>0</earliest>
+    <latest>now</latest>
+    <refresh>30s</refresh>
+    <refreshType>delay</refreshType>
+    <done>
+      <condition match="$job.resultCount$ &gt; 0">
+        <set token="latest_export">$result.export_id$</set>
+      </condition>
+      <condition>
+        <set token="latest_export">__none__</set>
+      </condition>
+    </done>
+  </search>
+  <row>
+    <panel>
+      <title>Selected snapshot</title>
+      <table>
+        <search>
+          <query>index=linkedin sourcetype=linkedin:ready earliest=0 latest=+10y | search event_kind=ready member_id=$member|s$ | where export_id=if($snapshot|s$="latest",$latest_export|s$,$snapshot|s$) | dedup export_id | table snapshot_time snapshot_time_basis status actual_records warning_count export_id</query>
+          <earliest>0</earliest>
+          <latest>now</latest>
+          <refresh>60s</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Applications by month</title>
+      <chart>
+        <search>
+          <query>`li_records` | search member_id=$member|s$ | where export_id=if($snapshot|s$="latest",$latest_export|s$,$snapshot|s$) | search dataset=job_application time_basis=activity | timechart span=1mon count AS Applications</query>
+          <earliest>0</earliest>
+          <latest>now</latest>
+          <refresh>60s</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="charting.chart">column</option>
+        <option name="charting.legend.placement">bottom</option>
+        <option name="drilldown">none</option>
+      </chart>
+    </panel>
+    <panel>
+      <title>Saved jobs by month</title>
+      <chart>
+        <search>
+          <query>`li_records` | search member_id=$member|s$ | where export_id=if($snapshot|s$="latest",$latest_export|s$,$snapshot|s$) | search dataset=saved_job time_basis=activity | timechart span=1mon count AS Saved</query>
+          <earliest>0</earliest>
+          <latest>now</latest>
+          <refresh>60s</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="charting.chart">column</option>
+        <option name="charting.legend.placement">bottom</option>
+        <option name="drilldown">none</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Companies applied to</title>
+      <chart>
+        <search>
+          <query>`li_records` | search member_id=$member|s$ | where export_id=if($snapshot|s$="latest",$latest_export|s$,$snapshot|s$) | search dataset=job_application | stats count AS Applications BY company | sort - Applications | head 20</query>
+          <earliest>0</earliest>
+          <latest>now</latest>
+          <refresh>60s</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="charting.chart">bar</option>
+        <option name="charting.legend.placement">bottom</option>
+        <option name="drilldown">none</option>
+      </chart>
+    </panel>
+    <panel>
+      <title>Roles applied to</title>
+      <chart>
+        <search>
+          <query>`li_records` | search member_id=$member|s$ | where export_id=if($snapshot|s$="latest",$latest_export|s$,$snapshot|s$) | search dataset=job_application | stats count AS Applications BY job_title | sort - Applications | head 20</query>
+          <earliest>0</earliest>
+          <latest>now</latest>
+          <refresh>60s</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="charting.chart">bar</option>
+        <option name="charting.legend.placement">bottom</option>
+        <option name="drilldown">none</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Applications also present in saved jobs</title>
+      <table>
+        <search>
+          <query>`li_records` | search member_id=$member|s$ | where export_id=if($snapshot|s$="latest",$latest_export|s$,$snapshot|s$) | search dataset IN (job_application,saved_job) | where job_url!="" | stats values(dataset) AS datasets values(company) AS company values(job_title) AS job_title BY job_url | where mvcount(datasets)=2 | table company job_title job_url</query>
+          <earliest>0</earliest>
+          <latest>now</latest>
+          <refresh>60s</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="count">10</option>
+      </table>
+    </panel>
+    <panel>
+      <title>Application history</title>
+      <table>
+        <search>
+          <query>`li_records` | search member_id=$member|s$ | where export_id=if($snapshot|s$="latest",$latest_export|s$,$snapshot|s$) | search dataset=job_application | sort - _time | table application_date company job_title job_url</query>
+          <earliest>0</earliest>
+          <latest>now</latest>
+          <refresh>60s</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="count">10</option>
+      </table>
+    </panel>
+  </row>
+</form>

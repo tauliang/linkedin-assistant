@@ -1,0 +1,350 @@
+{
+  "splunk_version": "10.4.4",
+  "stage": "dashboards",
+  "checks": [
+    {
+      "name": "reconciliation",
+      "rows": [
+        {
+          "datasets_seen": "39",
+          "reconciled": "1",
+          "actual": "9608",
+          "expected": "9608",
+          "expected_dataset_count": "39",
+          "warning_count": "0"
+        }
+      ]
+    },
+    {
+      "name": "scheduled_readiness",
+      "rows": [
+        {
+          "ready_events": "1",
+          "exports": "1",
+          "actual_records": "9608"
+        }
+      ]
+    },
+    {
+      "name": "installed_dashboard_searches",
+      "panels": [
+        {
+          "view": "career",
+          "panel": "Selected snapshot",
+          "rows": 1,
+          "numbers": {
+            "actual_records": "9608",
+            "warning_count": "0"
+          }
+        },
+        {
+          "view": "career",
+          "panel": "Most endorsed skills",
+          "rows": 20
+        },
+        {
+          "view": "career",
+          "panel": "Given and received endorsements",
+          "rows": 169,
+          "last_time_bucket": "2026-10-01T00:00:00+00:00"
+        },
+        {
+          "view": "career",
+          "panel": "Declared skills without received endorsements",
+          "rows": 48
+        },
+        {
+          "view": "career",
+          "panel": "Position history",
+          "rows": 20
+        },
+        {
+          "view": "career",
+          "panel": "Education",
+          "rows": 5
+        },
+        {
+          "view": "career",
+          "panel": "Certifications",
+          "rows": 12
+        },
+        {
+          "view": "import_health",
+          "panel": "Latest watcher heartbeat",
+          "rows": 1,
+          "numbers": {
+            "seconds_since_heartbeat": "2"
+          }
+        },
+        {
+          "view": "import_health",
+          "panel": "Recent import lifecycle",
+          "rows": 3
+        },
+        {
+          "view": "import_health",
+          "panel": "Per-dataset index reconciliation",
+          "rows": 39
+        },
+        {
+          "view": "import_health",
+          "panel": "Imports awaiting reconciliation",
+          "rows": 0
+        },
+        {
+          "view": "invitations",
+          "panel": "Selected snapshot",
+          "rows": 1,
+          "numbers": {
+            "actual_records": "9608",
+            "warning_count": "0"
+          }
+        },
+        {
+          "view": "invitations",
+          "panel": "Invitations by month and direction",
+          "rows": 12,
+          "last_time_bucket": "2026-10-01T00:00:00+00:00"
+        },
+        {
+          "view": "invitations",
+          "panel": "Incoming and outgoing totals",
+          "rows": 2
+        },
+        {
+          "view": "invitations",
+          "panel": "Invitation activity",
+          "rows": 344
+        },
+        {
+          "view": "jobs",
+          "panel": "Selected snapshot",
+          "rows": 1,
+          "numbers": {
+            "actual_records": "9608",
+            "warning_count": "0"
+          }
+        },
+        {
+          "view": "jobs",
+          "panel": "Applications by month",
+          "rows": 94,
+          "last_time_bucket": "2026-10-01T00:00:00+00:00"
+        },
+        {
+          "view": "jobs",
+          "panel": "Saved jobs by month",
+          "rows": 104,
+          "last_time_bucket": "2026-10-01T00:00:00+00:00"
+        },
+        {
+          "view": "jobs",
+          "panel": "Companies applied to",
+          "rows": 20
+        },
+        {
+          "view": "jobs",
+          "panel": "Roles applied to",
+          "rows": 20
+        },
+        {
+          "view": "jobs",
+          "panel": "Applications also present in saved jobs",
+          "rows": 0
+        },
+        {
+          "view": "jobs",
+          "panel": "Application history",
+          "rows": 1180
+        },
+        {
+          "view": "learning",
+          "panel": "Selected snapshot",
+          "rows": 1,
+          "numbers": {
+            "actual_records": "9608",
+            "warning_count": "0"
+          }
+        },
+        {
+          "view": "learning",
+          "panel": "Completed items over time",
+          "rows": 78,
+          "last_time_bucket": "2026-10-01T00:00:00+00:00"
+        },
+        {
+          "view": "learning",
+          "panel": "Content types",
+          "rows": 3
+        },
+        {
+          "view": "learning",
+          "panel": "Saved items",
+          "rows": 1,
+          "numbers": {
+            "Saved": "32"
+          }
+        },
+        {
+          "view": "learning",
+          "panel": "Items without a usable activity date",
+          "rows": 1,
+          "numbers": {
+            "Undated": "10"
+          }
+        },
+        {
+          "view": "learning",
+          "panel": "Learning library",
+          "rows": 805
+        },
+        {
+          "view": "network",
+          "panel": "Selected snapshot",
+          "rows": 1,
+          "numbers": {
+            "actual_records": "9608",
+            "warning_count": "0"
+          }
+        },
+        {
+          "view": "network",
+          "panel": "Connection additions by month",
+          "rows": 245,
+          "last_time_bucket": "2026-10-01T00:00:00+00:00"
+        },
+        {
+          "view": "network",
+          "panel": "Cumulative dated connections",
+          "rows": 245,
+          "last_time_bucket": "2026-10-01T00:00:00+00:00"
+        },
+        {
+          "view": "network",
+          "panel": "Top companies",
+          "rows": 20
+        },
+        {
+          "view": "network",
+          "panel": "Top job titles",
+          "rows": 20
+        },
+        {
+          "view": "network",
+          "panel": "Contacts",
+          "rows": 4508
+        },
+        {
+          "view": "network",
+          "panel": "Profile field completeness",
+          "rows": 1,
+          "numbers": {
+            "total": "4508",
+            "missing_company": "197",
+            "missing_title": "189"
+          }
+        },
+        {
+          "view": "overview",
+          "panel": "Selected snapshot",
+          "rows": 1,
+          "numbers": {
+            "actual_records": "9608",
+            "warning_count": "0"
+          }
+        },
+        {
+          "view": "overview",
+          "panel": "Connections",
+          "rows": 1,
+          "numbers": {
+            "Connections": "4508"
+          }
+        },
+        {
+          "view": "overview",
+          "panel": "Applications",
+          "rows": 1,
+          "numbers": {
+            "Applications": "1180"
+          }
+        },
+        {
+          "view": "overview",
+          "panel": "Endorsements received",
+          "rows": 1,
+          "numbers": {
+            "Endorsements": "814"
+          }
+        },
+        {
+          "view": "overview",
+          "panel": "Completed learning items",
+          "rows": 1,
+          "numbers": {
+            "Completed": "14"
+          }
+        },
+        {
+          "view": "overview",
+          "panel": "Available datasets",
+          "rows": 27
+        },
+        {
+          "view": "overview",
+          "panel": "Import inventory",
+          "rows": 39
+        },
+        {
+          "view": "setup",
+          "panel": "Inbox and worker state",
+          "rows": 1,
+          "numbers": {
+            "age_seconds": "4"
+          }
+        },
+        {
+          "view": "setup",
+          "panel": "Ready snapshots",
+          "rows": 1,
+          "numbers": {
+            "actual_records": "9608",
+            "warning_count": "0"
+          }
+        }
+      ]
+    }
+  ],
+  "status": "passed",
+  "app_version": "1.0.2",
+  "image": "splunk/splunk:10.4",
+  "image_manifest_digest": "sha256:4f18abfb106b29dc6af68868fb2e5c5ae68aa8e9ac6bfb28b7bec12ede2079aa",
+  "package_sha256": "af8a84d04e27d488a96264f32d593667d3876855774433cc56622faa8a30f69a",
+  "local_tests_passed": 34,
+  "before_fix": {
+    "ui_counts": "zero",
+    "scheduled_scan_count": 72,
+    "reconciliation_rows": 0,
+    "ready_events": 0,
+    "failure": "Literal search term from search search index=linkedin macro expansion"
+  },
+  "time_axis_comparison": {
+    "old_future_window": [
+      {
+        "last_bucket": "2106432000",
+        "has_future_bucket": "1"
+      }
+    ],
+    "current_time_window": [
+      {
+        "last_bucket": "1790812800",
+        "has_future_bucket": "0"
+      }
+    ]
+  },
+  "browser_verified_views": [
+    "overview",
+    "jobs",
+    "network"
+  ]
+}
