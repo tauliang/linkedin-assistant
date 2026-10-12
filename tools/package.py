@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
-"""Build a reproducible .spl (gzip-compressed tar) with a single app root."""
+"""Build a reproducible gzip-compressed tar with a single app root."""
 import argparse
 import gzip
 import hashlib
 import io
 import tarfile
 from pathlib import Path
+
+DEFAULT_OUTPUT=Path(__file__).resolve().parents[1]/'dist/linkedin_assistant-1.0.3.spl'
 
 ALLOWED_ROOTS={'bin','default','metadata','README','appserver','static'}
 ALLOWED_ROOT_FILES={'README.md','LICENSE','CHANGELOG.md'}
@@ -36,7 +38,7 @@ def package(source, destination):
 if __name__=='__main__':
     parser=argparse.ArgumentParser()
     parser.add_argument('--source',type=Path,default=Path(__file__).resolve().parents[1]/'build/linkedin_assistant')
-    parser.add_argument('--output',type=Path,default=Path(__file__).resolve().parents[1]/'dist/linkedin_assistant-1.0.2.spl')
+    parser.add_argument('--output',type=Path,default=DEFAULT_OUTPUT)
     args=parser.parse_args()
     digest=package(args.source,args.output)
     args.output.with_suffix(args.output.suffix+'.sha256').write_text(digest+'  '+args.output.name+'\n')

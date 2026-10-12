@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.3
+- Identify Tau Liang as the app author.
+- Keep Splunk package update checks enabled.
+- Distribute the release as a Splunk `.spl` package.
+
 ## 1.0.2
 - End analytical searches and time-chart axes at the current time instead of ten years in the future.
 - Fix macro expansion in Splunk Web and scheduled searches: remove the leading search command that became a literal raw-event filter.

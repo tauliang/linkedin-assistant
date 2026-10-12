@@ -13,6 +13,13 @@ class ConfigurationTests(unittest.TestCase):
         config.read(path)
         return config
 
+    def test_release_metadata_is_1_0_3_with_update_checks_enabled(self):
+        c=self.conf('app.conf')
+        self.assertEqual(c['launcher']['author'],'Tau Liang')
+        self.assertEqual(c['launcher']['version'],'1.0.3')
+        self.assertEqual(c['id']['version'],'1.0.3')
+        self.assertEqual(c['package']['check_for_updates'],'1')
+
     def test_inputs_are_explicitly_indexed_and_worker_enabled(self):
         c=self.conf('inputs.conf')
         for section in c.sections():

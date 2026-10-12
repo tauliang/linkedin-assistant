@@ -7,6 +7,12 @@ from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
 class PackageTests(unittest.TestCase):
+    def test_default_output_is_the_1_0_3_spl_release(self):
+        spec=importlib.util.spec_from_file_location('package',ROOT/'tools/package.py')
+        self.assertIsNotNone(spec.loader if spec else None)
+        module=importlib.util.module_from_spec(spec); spec.loader.exec_module(module)
+        self.assertEqual(module.DEFAULT_OUTPUT.name,'linkedin_assistant-1.0.3.spl')
+
     def test_package_is_deterministic_and_contains_no_runtime_data(self):
         spec=importlib.util.spec_from_file_location('package',ROOT/'tools/package.py')
         self.assertIsNotNone(spec.loader if spec else None)

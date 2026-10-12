@@ -1,18 +1,18 @@
-# LinkedIn Assistant 1.0.2
+# LinkedIn Assistant 1.0.3
 
 Drop a LinkedIn download ZIP into an inbox; the app imports supported data into **index `linkedin`** and automatically populates eight Splunk Enterprise dashboards. This independent app is not affiliated with or endorsed by LinkedIn.
 
-## Upgrade from 1.0.0 or 1.0.1
+## Upgrade from 1.0.0 through 1.0.2
 
-Install `linkedin_assistant-1.0.2.spl` through **Apps → Manage Apps → Install app from file**, select the option to upgrade the existing app, and restart Splunk. Keep the runtime directories and existing `linkedin` index. No ZIP reimport or index deletion is needed. Allow the next reconciliation job and dashboard refresh a few minutes to select the already indexed snapshot.
+Install `linkedin_assistant-1.0.3.spl` through **Apps → Manage Apps → Install app from file**, select the option to upgrade the existing app, and restart Splunk. Keep the runtime directories and existing `linkedin` index. No ZIP reimport or index deletion is needed. Allow the next reconciliation job and dashboard refresh a few minutes to select the already indexed snapshot.
 
-Version 1.0.2 removes the leading search command from macros and uses configured JSON extraction exactly once. This fixes scheduled reconciliation and duplicated snapshot tokens. If you previously saved diagnostic changes over the reconciliation report or macros, restore the full packaged definitions; local/user overrides take precedence over app defaults.
+Version 1.0.3 identifies Tau Liang as the app author and enables Splunk's package update check. It includes the reconciliation, snapshot selection, and time-axis corrections from 1.0.2. If you previously saved diagnostic changes over the reconciliation report or macros, restore the full packaged definitions; local/user overrides take precedence over app defaults.
 
 ## Install (single Enterprise instance)
 
 Target: **Splunk Enterprise 9.3+ on Linux**, using its bundled Python 3.9+ runtime. No pip install, LinkedIn credentials, internet access or HEC token is required on the Splunk server. The first release does not support Splunk Cloud or Windows.
 
-1. As a Splunk administrator, open **Apps → Manage Apps → Install app from file** and select `linkedin_assistant-1.0.2.spl`.
+1. As a Splunk administrator, open **Apps → Manage Apps → Install app from file** and select `linkedin_assistant-1.0.3.spl`.
 2. Restart Splunk when prompted. The package defines the `linkedin` index and enables the 30-second ZIP worker and file monitors. If an index named `linkedin` already exists, review its effective configuration with btool before use; local/system configuration takes precedence.
 3. Open **LinkedIn Assistant → Setup & inbox**. The heartbeat should show an inbox at:
 

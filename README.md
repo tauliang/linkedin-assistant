@@ -4,7 +4,7 @@ LinkedIn Assistant watches an inbox for LinkedIn export ZIP files, imports the d
 
 ## Install
 
-Download `dist/linkedin_assistant-1.0.2.spl`. In Splunk Web, choose **Apps → Manage Apps → Install app from file**, install the package, and restart Splunk. The app runs on a single Linux instance of Splunk Enterprise 9.3+ and uses its bundled Python 3.9+ runtime.
+Download `dist/linkedin_assistant-1.0.3.spl`. In Splunk Web, choose **Apps → Manage Apps → Install app from file**, install the package, and restart Splunk. The app runs on a single Linux instance of Splunk Enterprise 9.3+ and uses its bundled Python 3.9+ runtime.
 
 Drop an export ZIP into:
 
@@ -14,14 +14,14 @@ $SPLUNK_HOME/var/lib/linkedin_assistant/inbox/
 
 The app creates this directory on startup. Once a ZIP file is stable, the app imports it automatically. The dashboards select the newest snapshot after its indexed event count matches the import manifest. The default member is `personal`, and the default timezone is `UTC`. See [installation, privacy, settings and troubleshooting](build/linkedin_assistant/README.md).
 
-When upgrading from 1.0.0 or 1.0.1, select the app upgrade option and restart Splunk. Version 1.0.2 fixes macro expansion and duplicate JSON extraction, which previously prevented automatic readiness and snapshot selection. Existing indexed imports will reconcile without another copy of the ZIP. If you changed the reconciliation report or macros locally, restore the definitions included in the package.
+When upgrading from 1.0.0 through 1.0.2, select the app upgrade option and restart Splunk. Version 1.0.3 updates the package metadata and includes the macro expansion and JSON extraction fixes from 1.0.2. Existing indexed imports will reconcile without another copy of the ZIP. If you changed the reconciliation report or macros locally, restore the definitions included in the package.
 
 ## Repository
 
 - `build/linkedin_assistant/`: app source and installation guide.
 - `tests/`: parser, lifecycle, configuration, and packaging tests built with synthetic data.
 - `tools/`: deterministic package builder, dashboard generator, and Enterprise verification script.
-- `dist/`: installable `.spl`, SHA-256 checksum, and historical AppInspect report.
+- `dist/`: installable release archive, SHA-256 checksum, and historical AppInspect report.
 - `docs/`: design notes, implementation records, and validation results.
 
 The repository does not include a sample export or normalized personal records.
