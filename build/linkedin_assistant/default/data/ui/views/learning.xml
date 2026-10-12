@@ -1,0 +1,143 @@
+<?xml version='1.0' encoding='utf-8'?>
+<form version="1.1" theme="light">
+  <label>Learning</label>
+  <description>Counts refer to exported content items. Viewing duration and hours are not available.</description>
+  <init>
+    <set token="latest_export">__none__</set>
+  </init>
+  <fieldset submitButton="false" autoRun="true">
+    <input type="dropdown" token="member" searchWhenChanged="true">
+      <label>Member</label>
+      <default>personal</default>
+      <search>
+        <query>index=linkedin sourcetype=linkedin:* earliest=0 latest=+10y | search member_id=* | stats count BY member_id | eval member_label=if(member_id="personal","Personal",member_id) | fields member_id member_label</query>
+        <earliest>0</earliest>
+        <latest>now</latest>
+        <refresh>60s</refresh>
+        <refreshType>delay</refreshType>
+      </search>
+      <fieldForLabel>member_label</fieldForLabel>
+      <fieldForValue>member_id</fieldForValue>
+    </input>
+    <input type="dropdown" token="snapshot" searchWhenChanged="true">
+      <label>Snapshot</label>
+      <choice value="latest">Latest ready snapshot (automatic)</choice>
+      <default>latest</default>
+      <search>
+        <query>index=linkedin sourcetype=linkedin:ready earliest=0 latest=+10y | search event_kind=ready member_id=$member|s$ | dedup export_id | sort - import_epoch | eval label=snapshot_time." — ".status | fields label export_id</query>
+        <earliest>0</earliest>
+        <latest>now</latest>
+        <refresh>60s</refresh>
+        <refreshType>delay</refreshType>
+      </search>
+      <fieldForLabel>label</fieldForLabel>
+      <fieldForValue>export_id</fieldForValue>
+    </input>
+  </fieldset>
+  <search>
+    <query>index=linkedin sourcetype=linkedin:ready earliest=0 latest=+10y | search event_kind=ready member_id=$member|s$ | dedup export_id | sort - import_epoch | head 1 | fields export_id</query>
+    <earliest>0</earliest>
+    <latest>now</latest>
+    <refresh>30s</refresh>
+    <refreshType>delay</refreshType>
+    <done>
+      <condition match="$job.resultCount$ &gt; 0">
+        <set token="latest_export">$result.export_id$</set>
+      </condition>
+      <condition>
+        <set token="latest_export">__none__</set>
+      </condition>
+    </done>
+  </search>
+  <row>
+    <panel>
+      <title>Selected snapshot</title>
+      <table>
+        <search>
+          <query>index=linkedin sourcetype=linkedin:ready earliest=0 latest=+10y | search event_kind=ready member_id=$member|s$ | where export_id=if($snapshot|s$="latest",$latest_export|s$,$snapshot|s$) | dedup export_id | table snapshot_time snapshot_time_basis status actual_records warning_count export_id</query>
+          <earliest>0</earliest>
+          <latest>now</latest>
+          <refresh>60s</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Completed items over time</title>
+      <chart>
+        <search>
+          <query>`li_records` | search member_id=$member|s$ | where export_id=if($snapshot|s$="latest",$latest_export|s$,$snapshot|s$) | search dataset=learning time_basis=activity selected_date_field=content_completed_at_if_completed | timechart span=1mon count AS Completed</query>
+          <earliest>0</earliest>
+          <latest>now</latest>
+          <refresh>60s</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="charting.chart">column</option>
+        <option name="charting.legend.placement">bottom</option>
+        <option name="drilldown">none</option>
+      </chart>
+    </panel>
+    <panel>
+      <title>Content types</title>
+      <chart>
+        <search>
+          <query>`li_records` | search member_id=$member|s$ | where export_id=if($snapshot|s$="latest",$latest_export|s$,$snapshot|s$) | search dataset=learning | stats count AS Items BY content_type</query>
+          <earliest>0</earliest>
+          <latest>now</latest>
+          <refresh>60s</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="charting.chart">pie</option>
+        <option name="charting.legend.placement">bottom</option>
+        <option name="drilldown">none</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Saved items</title>
+      <single>
+        <search>
+          <query>`li_records` | search member_id=$member|s$ | where export_id=if($snapshot|s$="latest",$latest_export|s$,$snapshot|s$) | search dataset=learning | where in(lower(content_saved),"true","yes","1") | stats count AS Saved</query>
+          <earliest>0</earliest>
+          <latest>now</latest>
+          <refresh>60s</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="drilldown">none</option>
+      </single>
+    </panel>
+    <panel>
+      <title>Items without a usable activity date</title>
+      <single>
+        <search>
+          <query>`li_records` | search member_id=$member|s$ | where export_id=if($snapshot|s$="latest",$latest_export|s$,$snapshot|s$) | search dataset=learning time_basis=snapshot | stats count AS Undated</query>
+          <earliest>0</earliest>
+          <latest>now</latest>
+          <refresh>60s</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="drilldown">none</option>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Learning library</title>
+      <table>
+        <search>
+          <query>`li_records` | search member_id=$member|s$ | where export_id=if($snapshot|s$="latest",$latest_export|s$,$snapshot|s$) | search dataset=learning | table content_title content_type content_saved content_last_watched_date_if_viewed content_completed_at_if_completed</query>
+          <earliest>0</earliest>
+          <latest>now</latest>
+          <refresh>60s</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="count">10</option>
+      </table>
+    </panel>
+  </row>
+</form>

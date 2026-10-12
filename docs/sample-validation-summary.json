@@ -1,0 +1,13 @@
+{
+  "source_rows": 9993,
+  "expected_records": 9608,
+  "excluded_rows": 367,
+  "duplicate_rows": 18,
+  "quarantined_rows": 0,
+  "date_issues": 0,
+  "records": 9608,
+  "datasets": 39,
+  "excluded_values_checked": 123,
+  "value_leaks": 0,
+  "narrative_field_leaks": 0
+}

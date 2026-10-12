@@ -1,0 +1,10 @@
+<nav search_view="search" color="#0A66C2">
+  <view name="overview" default="true" />
+  <view name="network" />
+  <view name="invitations" />
+  <view name="jobs" />
+  <view name="career" />
+  <view name="learning" />
+  <view name="import_health" />
+  <view name="setup" />
+</nav>
